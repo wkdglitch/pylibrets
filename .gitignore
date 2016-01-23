@@ -1,0 +1,31 @@
+# Compiled python modules.
+__pycache__/
+*.py[cod]
+
+# Distribution / packaging
+.Python
+env/
+bin/
+build/
+develop-eggs/
+dist/
+eggs/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+venv
+venv-2.5
+env-2.5
+
+# Python egg metadata, regenerated from source files by setuptools.
+/*.egg-info
+
+# Unit test / coverage reports
+
+# OS X
+*.DS_Store
+
+# Other
+MANIFEST
