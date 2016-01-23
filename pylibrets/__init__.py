@@ -160,7 +160,7 @@ class RetsSession(object):
 			raise NoLoginException("You need to call login before search")
 
 		if limit:
-    		limit = 'NONE'
+			limit = 'NONE'
 
 		params = {'SearchType': resource,
 			'Class': search_class,
