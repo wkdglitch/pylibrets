@@ -13,13 +13,14 @@ import time
 import urllib
 
 from .models import (
-	RetsResource, RetsClass, RetsField, RetsLookup,
-	RetsLookupType, RetsObject
+	MetadataResource, MetadataClass, MetadataTable, MetadataLookup,
+	MetadataLookupType, MetadataObject
 )
 from .exceptions import (
 	LoginException, GetObjectException, SearchException,
 	GetMetadataException, NoLoginException
 )
+from .meta_parser import MetaParser, StandardXmlMetaParser
 
 
 def enum(**enums):
@@ -135,7 +136,7 @@ class RetsSession(object):
 
 		for i in range(3):
 			try:
-				return self._getobject(obj_type, resource , obj_id)
+				return self._get_object(obj_type, resource , obj_id)
 			except socket.timeout:
 				if i < 3:
 					print('timeout, try again')
@@ -184,7 +185,7 @@ class RetsSession(object):
 		resURL = url_parts.scheme + "://" + url_parts.netloc
 		return resURL
 
-	def _getobject(self, obj_type, resource , obj_id):
+	def _get_object(self, obj_type, resource , obj_id):
 		getobject_url = urljoin(self.base_url, self.server_info['GetObject'])
 		if self.user_agent_passwd:
 			self._set_rets_ua_authorization()

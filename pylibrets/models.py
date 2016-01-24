@@ -3,48 +3,86 @@ Model classes - contains the primary objects that power pylibRETS.
 """
 
 
-class RetsResource(object):
+class MetadataResource(object):
 	def __init__(self):
-		self.resource_id = None
-		self.standard_name = None
-		self.key_field = None
+		self.ResourceID = None
+		self.StandardName = None
+		self.KeyField = None
 
-class RetsClass(object):
+class MetadataClass(object):
 	def __init__(self):
-		self.class_name = None
-		self.standard_name = None
-		self.description = None
+		self.ClassName = None
+		self.StandardName = None
+		self.Description = None
+		self.VisibleName = None
+		self.TableVersion = None
+		self.TableDate = None
+		self.UpdateVersion = None
+		self.UpdateDate = None
+		self.ClassTimeStamp = None
+		self.DeletedFlagField = None
+		self.DeletedFlagValue = None
+		self.HasKeyIndex = None
+		self.OffsetSupport = None
 
-class RetsField(object):
+class MetadataTable(object):
 	def __init__(self):
-		self.system_name = None
-		self.standard_name = None
-		self.long_name = None
-		self.db_name = None
-		self.max_length = None
-		self.data_type = None
-		self.precision = None
-		self.is_searchable = None
-		self.required = None
-		self.interpretation = None
-		self.units = None
-		self.is_unique = None
-		self.lookup_name = None
+		self.SystemName = None
+		self.StandardName = None
+		self.LongName = None
+		self.DBName = None
+		self.ShortName = None
+		self.MaximumLength = None
+		self.DataType = None
+		self.Precision = None
+		self.Searchable = None
+		self.Interpretation = None
+		self.Alignment = None
+		self.UseSeparator = None
+		self.EditMaskID = None
+		self.LookupName = None
+		self.MaxSelect = None
+		self.Units = None
+		self.Index = None
+		self.Minimum = None
+		self.Maximum = None
+		self.Default = None
+		self.Required = None
+		self.SearchHelpID = None
+		self.Unique = None
+		self.UpdatesModTimeStamp = None
+		self.ForeignKey = None
+		self.ForeignField = None
+		self.KeyRetrievalQuery = None
+		self.KeyRetrievalSelect = None
+		self.InKeyIndex = None
+		self.FilterParentField = None
+		self.DefaultSearchOrder = None
+		self.Case = None
 
-class RetsLookup(object):
+class MetadataLookup(object):
 	def __init__(self):
-		self.lookup_name = None
-		self.visible_name = None
+		self.LookupName = None
+		self.VisibleName = None
+		self.Version = None
+		self.Date = None
+		self.FilterID = None
+		self.NotShownByDefault = None
 
-class RetsLookupType(object):
+class MetadataLookupType(object):
 	def __init__(self):
-		self.value = None
-		self.long_value = None
-		self.short_value = None
+		self.Value = None
+		self.LongValue = None
+		self.ShortValue = None
 
-class RetsObject(object):
+class MetadataObject(object):
 	def __init__(self):
-		self.object_id = None
-		self.mime_type = None
-		self.visible_name = None
-		self.description = None
+		self.ObjectType = None
+		self.MIMEType = None
+		self.VisibleName = None
+		self.Description = None
+		self.ObjectTimeStamp = None
+		self.ObjectCount = None
+		self.LocationAvailability = None
+		self.ObjectData = None
+		self.MaxFileSize = None
