@@ -21,6 +21,7 @@ from .exceptions import (
 	GetMetadataException, NoLoginException
 )
 from .meta_parser import MetaParser, StandardXmlMetaParser
+from .rets_parser import SearchResultSet, CompactResultSetParser
 
 
 def enum(**enums):
@@ -36,24 +37,25 @@ RetsVersion = enum(
 	RETS_1_8_0 = "RETS/1.8.0"
 )
 
+DEFAULT_RETS_VERSION = RetsVersion.RETS_1_5
+DEFAULT_USER_AGENT = "%s/%s" % (__title__, __version__)
+
+RETS_SERVER_HEADER = 'RETS-Server'
+RETS_VERSION_HEADER = 'RETS-Version'
+RETS_UA_AUTH_HEADER = 'RETS-UA-Authorization'
+RETS_REQUEST_ID_HEADER = 'RETS-Request-ID'
+RETS_SESSION_ID_HEADER = 'RETS-Session-ID'
+RETS_USER_AGENT_HEADER = 'User-Agent'
 
 class RetsSession(object):
-	RETS_SERVER_HEADER = 'RETS-Server'
-	RETS_VERSION_HEADER = 'RETS-Version'
-	RETS_UA_AUTH_HEADER = 'RETS-UA-Authorization'
-	RETS_REQUEST_ID_HEADER = 'RETS-Request-ID'
-	RETS_SESSION_ID_HEADER = 'RETS-Session-ID'
-	RETS_USER_AGENT_HEADER = 'User-Agent'
-	DEFAULT_USER_AGENT = "pylibrets/1.0"
-	DEFAULT_RETS_VERSION = RetsVersion.RETS_1_5
 
-	def __init__(self, login_url, user, passwd, user_agent = None, user_agent_passwd = None, rets_version = ''):
+	def __init__(self, login_url, user, passwd, user_agent = None, user_agent_passwd = None, rets_version = DEFAULT_RETS_VERSION):
 		self.rets_ua_authorization = None
 		self.user = user
 		self.passwd = passwd
-		self.user_agent = self.DEFAULT_USER_AGENT if len(user_agent) == 0 else user_agent
+		self.user_agent = DEFAULT_USER_AGENT if len(user_agent) == 0 else user_agent
 		self.user_agent_passwd = user_agent_passwd
-		self.rets_version = self.DEFAULT_RETS_VERSION if len(rets_version) == 0 else rets_version
+		self.rets_version = rets_version
 		self.base_url = self._get_base_url(login_url)
 		self.login_url = login_url
 		self._session = None
@@ -61,7 +63,7 @@ class RetsSession(object):
 		self.rets_error = None
 		self.server_info = None
 		self.detected_rets_version = None
-		self.debug = self.DEFAULT_USER_AGENT
+		self.debug = DEFAULT_USER_AGENT
 
 	def __del__(self):
 		self._session = None
@@ -72,11 +74,12 @@ class RetsSession(object):
 			self._session = requests.session()
 
 			headers = {'Accept':"*/*",
-				self.RETS_USER_AGENT_HEADER:self.user_agent,
-				self.RETS_VERSION_HEADER:self.rets_version}
+				RETS_USER_AGENT_HEADER:self.user_agent,
+				RETS_VERSION_HEADER:self.rets_version}
 
 			if self.user_agent_passwd:
-				headers[self.RETS_UA_AUTH_HEADER] = self._calculate_rets_ua_authorization(''
+				headers[RETS_UA_AUTH_HEADER] = self._calculate_rets_ua_authorization(
+													''
 													, self.user_agent
 													, self.user_agent_passwd
 													, self.rets_version)
@@ -90,11 +93,12 @@ class RetsSession(object):
 			response.raise_for_status()
 
 			self.server_info = self._parse_login_response(response.text)
-			self.server_info[self.RETS_SERVER_HEADER] = response.headers[self.RETS_SERVER_HEADER]
-			self.server_info[self.RETS_VERSION_HEADER] = response.headers[self.RETS_VERSION_HEADER]
+			self.server_info[RETS_SERVER_HEADER] = response.headers[RETS_SERVER_HEADER]
+			self.server_info[RETS_VERSION_HEADER] = response.headers[RETS_VERSION_HEADER]
 
 			if self.user_agent_passwd:
-				self.rets_ua_authorization = self._calculate_rets_ua_authorization(response.cookies[self.RETS_SESSION_ID_HEADER]
+				self.rets_ua_authorization = self._calculate_rets_ua_authorization(
+													response.cookies[RETS_SESSION_ID_HEADER]
 													, self.user_agent
 													, self.user_agent_passwd
 													, self.rets_version)
@@ -169,8 +173,9 @@ class RetsSession(object):
 			'QueryType': 'DMQL2',
 			'Count': '0',
 			'Format': 'COMPACT-DECODED',
+			# 'Format': 'COMPACT',
 			'Limit': limit,
-			'Select': select,
+			# 'Select': select,
 			'StandardNames': '0'}
 		search_url = urljoin(self.base_url, self.server_info['Search'])
 		if self.user_agent_passwd:
@@ -178,7 +183,7 @@ class RetsSession(object):
 		search_response = self._session.post(search_url, params)
 		search_response.raise_for_status()
 		self._parse_search_response(search_response.text)
-		return search_response.text
+		return CompactResultSetParser(search_response.text)
 
 	def _get_base_url(self, url_str):
 		url_parts = urlparse(url_str)
@@ -237,7 +242,7 @@ class RetsSession(object):
 		return reply_code, reply_text
 
 	def _set_rets_ua_authorization(self):
-		self._session.headers[self.RETS_UA_AUTH_HEADER] = self.rets_ua_authorization;
+		self._session.headers[RETS_UA_AUTH_HEADER] = self.rets_ua_authorization;
 
 	def _calculate_rets_ua_authorization(self, sid, user_agent, user_agent_passwd, rets_version):
 		product = user_agent

@@ -18,3 +18,6 @@ class GetMetadataException(Exception):
 
 class NoLoginException(Exception):
 	pass
+
+class RetsException(Exception):
+	pass
