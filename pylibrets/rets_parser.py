@@ -2,7 +2,6 @@
 RETS search response parser classes - .
 """
 from xml.etree import ElementTree
-
 from .exceptions import RetsException
 
 
@@ -33,9 +32,10 @@ class CompactResultSetParser(SearchResultSet):
 
 	def get_data(self):
 		data_rows = []
+		column_list = self.get_columns()
 		data_xml_list = self._get_all_data_rows_xml()
 		for item in data_xml_list:
-			row = self._fix_compact_array(item.text.split(chr(self.delimiter)))
+			row = dict(zip(column_list, self._fix_compact_array(item.text.split(chr(self.delimiter)))))
 			data_rows.append(row)
 		return data_rows
 
