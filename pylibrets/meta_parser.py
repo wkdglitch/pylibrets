@@ -77,7 +77,7 @@ class StandardXmlMetadataParser(MetadataParser):
     def _xml_get_class(self, resource_id, class_name):
         class_xml_list = self._xml_get_class_all(resource_id)
         for class_xml in class_xml_list:
-            if class_name == class_xml.find('ClassName').text:
+            if class_name == self._getElementText(class_xml, 'ClassName'):
                 return class_xml
 
     def _xml_get_table_all(self, resource_id, class_name):
@@ -87,7 +87,7 @@ class StandardXmlMetadataParser(MetadataParser):
     def _xml_get_table(self, resource_id, class_name, field_system_name):
         field_xml_list = self._xml_get_table_all(resource_id, class_name)
         for field_xml in field_xml_list:
-            if field_system_name == field_xml.find('SystemName').text:
+            if field_system_name == self._getElementText(field_xml, 'SystemName'):
                 return field_xml
 
     def _xml_get_lookup_all(self, resource_id):
@@ -100,7 +100,7 @@ class StandardXmlMetadataParser(MetadataParser):
     def _xml_get_lookup(self, resource_id, lookup_name):
         lookup_xml_list = self._xml_get_lookup_all(resource_id)
         for lookup_xml in lookup_xml_list:
-            if lookup_name == lookup_xml.find('LookupName').text:
+            if lookup_name == self._getElementText(lookup_xml, 'LookupName'):
                 return lookup_xml
 
     def _xml_get_lookup_type_all(self, resource_id, lookup_name):
@@ -116,28 +116,28 @@ class StandardXmlMetadataParser(MetadataParser):
 
     def GetSystem(self):
         system_xml = self._xml_get_system()
-        system = MetadataSystem()
-        system.GetSystemID = self._getElementText(system_xml, 'SystemID')
+        system                      = MetadataSystem()
+        system.GetSystemID          = self._getElementText(system_xml, 'SystemID')
         system.GetSystemDescription = self._getElementText(system_xml, 'SystemDescription')
-        system.GetComments = self._getElementText(system_xml, 'Comments')
-        system.GetTimeZoneOffset = self._getElementText(system_xml, 'TimeZoneOffset')
-        system.GetMetadataID = self._getElementText(system_xml, 'MetadataID')
-        system.GetResourceVersion = self._getElementText(system_xml, 'ResourceVersion')
-        system.GetResourceDate = self._getElementText(system_xml, 'ResourceDate')
+        system.GetComments          = self._getElementText(system_xml, 'Comments')
+        system.GetTimeZoneOffset    = self._getElementText(system_xml, 'TimeZoneOffset')
+        system.GetMetadataID        = self._getElementText(system_xml, 'MetadataID')
+        system.GetResourceVersion   = self._getElementText(system_xml, 'ResourceVersion')
+        system.GetResourceDate      = self._getElementText(system_xml, 'ResourceDate')
         system.GetForeignKeyVersion = self._getElementText(system_xml, 'ForeignKeyVersion')
-        system.GetForeignKeyDate = self._getElementText(system_xml, 'ForeignKeyDate')
-        system.GetFilterVersion = self._getElementText(system_xml, 'FilterVersion')
-        system.GetFilterDate = self._getElementText(system_xml, 'FilterDate')
+        system.GetForeignKeyDate    = self._getElementText(system_xml, 'ForeignKeyDate')
+        system.GetFilterVersion     = self._getElementText(system_xml, 'FilterVersion')
+        system.GetFilterDate        = self._getElementText(system_xml, 'FilterDate')
         return system
 
     def GetAllResources(self):
         resource_list = []
         resource_xml_list = self._xml_get_resource_all()
         for resource_xml in resource_xml_list:
-            resource = MetadataResource()
-            resource.ResourceID = self._getElementText(resource_xml, 'ResourceID')
+            resource              = MetadataResource()
+            resource.ResourceID   = self._getElementText(resource_xml, 'ResourceID')
             resource.StandardName = self._getElementText(resource_xml, 'StandardName')
-            resource.KeyField = self._getElementText(resource_xml, 'KeyField')
+            resource.KeyField     = self._getElementText(resource_xml, 'KeyField')
             resource_list.append(resource)
         return resource_list
 
@@ -151,10 +151,10 @@ class StandardXmlMetadataParser(MetadataParser):
         class_list = []
         class_xml_list = self._xml_get_class_all(resource_id)
         for class_xml in class_xml_list:
-            rets_class = MetadataClass()
-            rets_class.ClassName = class_xml.find('ClassName').text
-            rets_class.StandardName = class_xml.find('StandardName').text
-            rets_class.Description = class_xml.find('Description').text
+            rets_class              = MetadataClass()
+            rets_class.ClassName    = self._getElementText(class_xml, 'ClassName')
+            rets_class.StandardName = self._getElementText(class_xml, 'StandardName')
+            rets_class.Description  = self._getElementText(class_xml, 'Description')
             class_list.append(rets_class)
         return class_list
 
@@ -168,20 +168,20 @@ class StandardXmlMetadataParser(MetadataParser):
         field_list = []
         field_xml_list = self._xml_get_table_all(resource_id, class_name)
         for field_xml in field_xml_list:
-            rets_field = MetadataTable()
-            rets_field.SystemName = field_xml.find('SystemName').text
-            rets_field.StandardName = field_xml.find('StandardName').text
-            rets_field.LongName = field_xml.find('LongName').text
-            rets_field.DBName = field_xml.find('DBName').text
-            rets_field.MaximumLength = field_xml.find('MaximumLength').text
-            rets_field.DataType = field_xml.find('DataType').text
-            rets_field.Precision = field_xml.find('Precision').text
-            rets_field.Searchable = field_xml.find('Searchable').text
-            rets_field.Required = field_xml.find('Required').text
-            rets_field.Interpretation = field_xml.find('Interpretation').text
-            rets_field.Units = field_xml.find('Units').text
-            rets_field.Unique = field_xml.find('Unique').text
-            rets_field.LookupName = field_xml.find('LookupName').text
+            rets_field                = MetadataTable()
+            rets_field.SystemName     = self._getElementText(field_xml, 'SystemName')
+            rets_field.StandardName   = self._getElementText(field_xml, 'StandardName')
+            rets_field.LongName       = self._getElementText(field_xml, 'LongName')
+            rets_field.DBName         = self._getElementText(field_xml, 'DBName')
+            rets_field.MaximumLength  = self._getElementText(field_xml, 'MaximumLength')
+            rets_field.DataType       = self._getElementText(field_xml, 'DataType')
+            rets_field.Precision      = self._getElementText(field_xml, 'Precision')
+            rets_field.Searchable     = self._getElementText(field_xml, 'Searchable')
+            rets_field.Required       = self._getElementText(field_xml, 'Required')
+            rets_field.Interpretation = self._getElementText(field_xml, 'Interpretation')
+            rets_field.Units          = self._getElementText(field_xml, 'Units')
+            rets_field.Unique         = self._getElementText(field_xml, 'Unique')
+            rets_field.LookupName     = self._getElementText(field_xml, 'LookupName')
             field_list.append(rets_field)
         return field_list
 
@@ -196,9 +196,9 @@ class StandardXmlMetadataParser(MetadataParser):
         lookup_xml_list = self._xml_get_lookup_all(resource_id)
         if lookup_xml_list is not None:
             for lookup_xml in lookup_xml_list:
-                lookup = MetadataLookup()
-                lookup.LookupName = lookup_xml.find('LookupName').text
-                lookup.VisibleName = lookup_xml.find('VisibleName').text
+                lookup             = MetadataLookup()
+                lookup.LookupName  = self._getElementText(lookup_xml, 'LookupName')
+                lookup.VisibleName = self._getElementText(lookup_xml, 'VisibleName')
                 lookup_list.append(lookup)
         return lookup_list
 
@@ -212,10 +212,10 @@ class StandardXmlMetadataParser(MetadataParser):
         lookup_list = []
         lookup_type_xml_list = self._xml_get_lookup_type_all(resource_id, lookup_name)
         for lookup_type_xml in lookup_type_xml_list:
-            lookup_type = MetadataLookupType()
-            lookup_type.Value = lookup_type_xml.find('Value').text
-            lookup_type.LongValue = lookup_type_xml.find('LongValue').text
-            lookup_type.ShortValue = lookup_type_xml.find('ShortValue').text
+            lookup_type            = MetadataLookupType()
+            lookup_type.Value      = self._getElementText(lookup_type_xml, 'Value')
+            lookup_type.LongValue  = self._getElementText(lookup_type_xml, 'LongValue')
+            lookup_type.ShortValue = self._getElementText(lookup_type_xml, 'ShortValue')
             lookup_list.append(lookup_type)
         return lookup_list
 
@@ -224,11 +224,11 @@ class StandardXmlMetadataParser(MetadataParser):
         object_xml_list = self._xml_get_object_all(resource_id)
         if object_xml_list is not None:
             for object_xml in object_xml_list:
-                obj = MetadataObject()
-                obj.ObjectType = object_xml.find('ObjectType').text
-                obj.StandardName = object_xml.find('StandardName').text
-                obj.MIMEType = object_xml.find('MimeType').text
-                obj.Description = object_xml.find('Description').text
+                obj              = MetadataObject()
+                obj.ObjectType   = self._getElementText(object_xml, 'ObjectType')
+                obj.StandardName = self._getElementText(object_xml, 'StandardName')
+                obj.MIMEType     = self._getElementText(object_xml, 'MimeType')
+                obj.Description  = self._getElementText(object_xml, 'Description')
                 object_list.append(obj)
         return object_list
 
