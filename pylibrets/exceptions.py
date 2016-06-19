@@ -1,23 +1,21 @@
-"""
-Exception classes - Subclassing allows you to check for specific errors
-"""
+"""Exception classes - Subclassing allows you to check for specific errors."""
 import pylibrets
 
 
 class LoginException(Exception):
-	pass
+    pass
 
 class GetObjectException(Exception):
-	pass
+    pass
 
 class SearchException(Exception):
-	pass
+    pass
 
 class GetMetadataException(Exception):
-	pass
+    pass
 
 class NoLoginException(Exception):
-	pass
+    pass
 
 class RetsException(Exception):
-	pass
+    pass

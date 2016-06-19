@@ -1,64 +1,83 @@
-"""
-RETS search response parser classes - .
-"""
+"""RETS search response parser classes."""
+
 from xml.etree import ElementTree
 from .exceptions import RetsException
 
 
 class SearchResultSet(object):
 
-	def get_columns(self):
-		pass
+    def GetReplyCode(self):
+        pass
 
-	def get_data(self):
-		pass
+    def GetReplyText(self):
+        pass
+
+    def GetCount(self):
+        pass
+
+    def GetColumns(self):
+        pass
+
+    def GetData(self):
+        pass
 
 
 class CompactResultSetParser(SearchResultSet):
 
-	def __init__(self, xml_str):
-		self.xml_str = xml_str
-		self.result_xml = ElementTree.fromstring(xml_str)
-		self.delimiter = self._get_delimiter()
+    def __init__(self, xml_str):
+        self.xml_str = xml_str
+        self.result_xml = ElementTree.fromstring(xml_str)
+        self.delimiter = self._get_delimiter()
 
-	def _get_delimiter(self):
-		delimiter_node = self.result_xml.find('DELIMITER')
-		return int(delimiter_node.attrib['value'])
 
-	def get_columns(self):
-		column_xml_list = self._get_all_column_xml()
-		column_list = self._fix_compact_array(column_xml_list.text.split(chr(self.delimiter)))
-		return column_list
+    def _get_delimiter(self):
+        delimiter_node = self.result_xml.find('DELIMITER')
+        return int(delimiter_node.attrib['value'])
 
-	def get_data(self):
-		data_rows = []
-		column_list = self.get_columns()
-		data_xml_list = self._get_all_data_rows_xml()
-		for item in data_xml_list:
-			row = dict(zip(column_list, self._fix_compact_array(item.text.split(chr(self.delimiter)))))
-			data_rows.append(row)
-		return data_rows
 
-	def _get_all_column_xml(self):
-		column_xml = self.result_xml.find('COLUMNS')
-		return column_xml
+    def _fix_compact_array(self, data_list):
+        if len(data_list) < 2:
+            raise RetsException('Unknown COMPACT format: ')
 
-	def _get_all_data_rows_xml(self):
-		data_xml_list = self.result_xml.findall('DATA')
-		return data_xml_list
+        if not len(data_list[0]) == 0:
+            raise RetsException('nvalid COMPACT format, missing initial tab: ')
+        else:
+            del data_list[0]
 
-	def _fix_compact_array(self, data_list):
-		if len(data_list) < 2:
-			raise RetsException('Unknown COMPACT format: ')
+        if not len(data_list[-1]) == 0:
+            raise RetsException('Invalid COMPACT format, missing final tab: ')
+        else:
+            del data_list[-1]
 
-		if not len(data_list[0]) == 0:
-			raise RetsException('nvalid COMPACT format, missing initial tab: ')
-		else:
-			del data_list[0]
+        return data_list
 
-		if not len(data_list[-1]) == 0:
-			raise RetsException('Invalid COMPACT format, missing final tab: ')
-		else:
-			del data_list[-1]
 
-		return data_list
+    def GetReplyCode(self):
+        replyCode = self.result_xml.find('RETS').get('ReplyCode')
+        return int(replyCode)
+
+
+    def GetReplyText(self):
+        replyText = self.result_xml.find('RETS').get('ReplyText')
+        return replyText
+
+
+    def GetCount(self):
+        count = self.result_xml.find('COUNT').get('Records')
+        return int(count)
+
+
+    def GetColumns(self):
+        column_xml_list = self.result_xml.find('COLUMNS')
+        column_list = self._fix_compact_array(column_xml_list.text.split(chr(self.delimiter)))
+        return column_list
+
+
+    def GetData(self):
+        data_rows = []
+        column_list = self.GetColumns()
+        data_xml_list = self.result_xml.findall('DATA')
+        for item in data_xml_list:
+            row = dict(zip(column_list, self._fix_compact_array(item.text.split(chr(self.delimiter)))))
+            data_rows.append(row)
+        return data_rows

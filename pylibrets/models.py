@@ -2,6 +2,19 @@
 Model classes - contains the primary objects that power pylibRETS.
 """
 
+class MetadataSystem(object):
+    def __init__(self):
+		self.GetSystemID = None
+		self.GetSystemDescription = None
+		self.GetComments = None
+		self.GetTimeZoneOffset = None
+		self.GetMetadataID = None
+		self.GetResourceVersion = None
+		self.GetResourceDate = None
+		self.GetForeignKeyVersion = None
+		self.GetForeignKeyDate = None
+		self.GetFilterVersion = None
+		self.GetFilterDate = None
 
 class MetadataResource(object):
 	def __init__(self):
@@ -86,3 +99,46 @@ class MetadataObject(object):
 		self.LocationAvailability = None
 		self.ObjectData = None
 		self.MaxFileSize = None
+
+class LoginResponse(object):
+	def __init__(self):
+		self.GetMemberName = None
+		self.GetUserInfo = None
+		self.GetBroker = None
+		self.GetMetadataVersion = None
+		self.GetMetadataTimestamp = None
+		self.GetMinMetadataTimestamp = None
+		self.GetOfficeList = None
+		self.GetBalance = None
+		self.GetTimeout = None
+		self.GetPasswordExpire = None
+		self.GetActionUrl = None
+		self.GetChangePasswordUrl = None
+		self.GetGetObjectUrl = None
+		self.GetLoginUrl = None
+		self.GetLoginCompleteUrl = None
+		self.GetLogoutUrl = None
+		self.GetSearchUrl = None
+		self.GetGetMetadataUrl = None
+		self.GetServerInformationUrl = None
+		self.GetUpdateUrl = None
+		self.GetPayloadListUrl = None
+		self.GetUserID = None
+		self.GetUserClass = None
+		self.GetUserLevel = None
+		self.GetAgentCode = None
+		self.GetBrokerCode = None
+		self.GetBrokerBranch = None
+		self.GetMetadataID = None
+		self.GetWarnPasswordExpirationDays = None
+		self.GetStandardNamesVersion = None
+		self.GetVendorName = None
+		self.GetServerProductName = None
+		self.GetServerProductVersion = None
+		self.GetOperatorName = None
+		self.GetRoleName = None
+		self.GetSupportContactInformation = None
+		self.GetSessionInformationTokens = None
+
+	def CreateCapabilityUrls(baseUrl):
+		pass
